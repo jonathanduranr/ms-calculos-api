@@ -25,12 +25,12 @@ jobs:
 
     steps:
       - name: Descargar codigo fuente
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Configurar entorno Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Ejecutar pruebas unitarias automatizadas
         run: npm test
@@ -47,18 +47,18 @@ jobs:
 
     steps:
       - name: Descargar codigo fuente
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
 
       - name: Configurar entorno Node.js
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v7
         with:
-          node-version: '20'
+          node-version: '24'
 
       - name: Compilar y empaquetar aplicacion
         run: npm run build
 
       - name: Almacenar Artefacto de Produccion
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: paquete-produccion
           path: dist/
