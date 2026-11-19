@@ -58,23 +58,23 @@ jobs:
         run: npm run build
 
       - name: Construir Imagen Docker
-        run: docker build -t servicio-calculos:${{ github.sha }} .
+        run: docker build -t servicio-calculos:prod-${{ github.run_number }} .
 
       - name: Verificacion de Despliegue (Smoke Test / Health Check)
         run: |
-          docker run -d --name app-test -p 8080:80 servicio-calculos:${{ github.sha }}
+          docker run -d --name app-test -p 8080:80 servicio-calculos:prod-${{ github.run_number }}
           sleep 2
           curl -f -I http://localhost:8080
           docker stop app-test
 
       - name: Exportar Imagen Docker como Artefacto
-        run: docker save servicio-calculos:${{ github.sha }} | gzip > servicio-calculos-docker.tar.gz
+        run: docker save servicio-calculos:prod-${{ github.run_number }} | gzip > servicio-calculos-prod-${{ github.run_number }}.tar.gz
 
       - name: Almacenar Artefacto en GitHub
         uses: actions/upload-artifact@v7
         with:
-          name: imagen-docker-produccion
+          name: imagen-docker-prod-${{ github.run_number }}
           path: |
-            servicio-calculos-docker.tar.gz
+            servicio-calculos-prod-${{ github.run_number }}.tar.gz
             dist/
           retention-days: 5
