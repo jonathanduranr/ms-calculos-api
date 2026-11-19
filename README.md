@@ -30,7 +30,9 @@ npm run build
 ├── test/
 │   └── math.test.js      # Pruebas unitarias automatizadas
 ├── scripts/
-│   └── build.js          # Script de empaquetado de producción
+│   └── build.js          # Script de compilación (dist/)
+├── Dockerfile            # Definición de imagen Docker (Nginx Alpine)
+├── .dockerignore
 └── package.json
 ```
 
@@ -78,4 +80,4 @@ El workflow configurado en `.github/workflows/ci.yml` opera en dos etapas:
 | Etapa | Disparador (*Trigger*) | Acciones ejecutadas |
 | :--- | :--- | :--- |
 | **1. Integración Continua (CI)** | `pull_request` y `push` a `main` | Descarga el código, configura Node.js 24 y ejecuta todas las pruebas unitarias (`npm test`). |
-| **2. Entrega Continua (CD)** | Solo `push` (Merge) a `main` | Si CI es exitoso: compila la aplicación (`npm run build`), almacena el artefacto `paquete-produccion` y ejecuta el despliegue. |
+| **2. Entrega Continua (CD)** | Solo `push` (Merge) a `main` | Si CI es exitoso: compila (`npm run build`), construye la imagen Docker (`Dockerfile`), valida el servicio con un *Health Check* (`curl`) y guarda el artefacto `imagen-docker-produccion`. |
