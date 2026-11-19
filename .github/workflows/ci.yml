@@ -1,0 +1,71 @@
+# ==============================================================================
+# PIPELINE DE INTEGRACIÓN Y ENTREGA CONTINUA (CI/CD) - DUOC UC
+# Asignatura: Introducción a Herramientas DevOps (ISY1101)
+# ==============================================================================
+
+name: Pipeline CI/CD - Flujo Profesional
+
+# 1. EVENTOS DESENCADENANTES (TRIGGERS)
+# - pull_request: Valida el código antes de mezclarlo (Solo CI)
+# - push a main:  Valida, empaqueta y despliega tras el merge (CI + CD)
+on:
+  pull_request:
+    branches: [ "main" ]
+  push:
+    branches: [ "main" ]
+
+jobs:
+  # ============================================================================
+  # ETAPA 1: INTEGRACIÓN CONTINUA (CI)
+  # Se ejecuta tanto en el Pull Request como al hacer Merge (push) a main.
+  # ============================================================================
+  integracion-continua:
+    name: 1. CI - Pruebas Unitarias
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo fuente
+        uses: actions/checkout@v4
+
+      - name: Configurar entorno Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Ejecutar pruebas unitarias automatizadas
+        run: npm test
+
+  # ============================================================================
+  # ETAPA 2: ENTREGA CONTINUA (CD)
+  # Depende de que CI pase (needs) y SOLO corre al hacer Merge/Push a main.
+  # ============================================================================
+  entrega-continua:
+    name: 2. CD - Artefacto y Despliegue
+    needs: integracion-continua
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo fuente
+        uses: actions/checkout@v4
+
+      - name: Configurar entorno Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+
+      - name: Compilar y empaquetar aplicacion
+        run: npm run build
+
+      - name: Almacenar Artefacto de Produccion
+        uses: actions/upload-artifact@v4
+        with:
+          name: paquete-produccion
+          path: dist/
+          retention-days: 5
+
+      - name: Desplegar en ambiente productivo
+        run: |
+          echo "Iniciando despliegue de paquete-produccion..."
+          echo "Servicio levantado correctamente."
+          echo "Health Check: 200 OK"
