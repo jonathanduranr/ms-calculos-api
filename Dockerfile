@@ -1,8 +1,15 @@
-# Imagen base ultraliviana con servidor web Nginx
-FROM nginx:alpine
+# Imagen base oficial de Node.js ultraliviana
+FROM node:24-alpine
 
-# Copiamos los archivos compilados desde dist/ hacia el directorio web de Nginx
-COPY dist/ /usr/share/nginx/html/
+# Directorio de trabajo dentro del contenedor
+WORKDIR /app
 
-# Exponemos el puerto estándar HTTP
-EXPOSE 80
+# Copiamos definición del proyecto y código fuente
+COPY package.json ./
+COPY src/ ./src/
+
+# Exponemos el puerto del microservicio
+EXPOSE 3000
+
+# Comando de inicio en producción
+CMD ["node", "src/server.js"]

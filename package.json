@@ -1,13 +1,13 @@
 {
-  "name": "demo-devops-duoc",
+  "name": "ms-calculos-api",
   "version": "1.0.0",
-  "description": "Demo de Integración Continua con GitHub Actions para Duoc UC",
-  "main": "src/math.js",
+  "description": "Microservicio API REST de operaciones matemáticas con pipeline CI/CD",
+  "main": "src/server.js",
   "scripts": {
-    "test": "node --test test/*.test.js",
-    "build": "node scripts/build.js"
+    "start": "node src/server.js",
+    "test": "node --test test/*.test.js"
   },
-  "keywords": ["devops", "ci-cd", "github-actions", "duocuc"],
+  "keywords": ["microservice", "api", "devops", "ci-cd"],
   "author": "Jonathan Duran",
   "license": "ISC"
 }
