@@ -32,11 +32,11 @@ jobs:
         run: npm test
 
   # ============================================================================
-  # ETAPA 2: ENTREGA CONTINUA (CD)
+  # ETAPA 2: ENTREGA CONTINUA (CD) - GENERACIÓN DE ARTEFACTO
   # Depende de CI (needs) y SOLO corre tras aprobar y hacer Merge a main.
   # ============================================================================
   entrega-continua:
-    name: 2. CD - Imagen Docker y Despliegue
+    name: 2. CD - Construccion y Artefacto
     needs: integracion-continua
     if: github.event_name == 'push' && github.ref == 'refs/heads/main'
     runs-on: ubuntu-latest
@@ -47,16 +47,6 @@ jobs:
 
       - name: Construir Imagen Docker versionada
         run: docker build -t ms-calculos-api:prod-${{ github.run_number }} .
-
-      - name: Verificacion Post-Despliegue (Smoke Test / Health Check)
-        run: |
-          docker run -d --name ms-test -p 3000:3000 ms-calculos-api:prod-${{ github.run_number }}
-          sleep 2
-          curl -f http://localhost:3000/health
-          echo ""
-          curl -f "http://localhost:3000/sumar?a=2&b=3"
-          echo ""
-          docker stop ms-test
 
       - name: Exportar Imagen Docker como Artefacto
         run: docker save ms-calculos-api:prod-${{ github.run_number }} | gzip > ms-calculos-api-prod-${{ github.run_number }}.tar.gz

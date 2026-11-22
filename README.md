@@ -90,4 +90,4 @@ El PR únicamente podrá integrarse a `main` cuando cumpla con **ambos candados*
 | Etapa | Disparador (*Trigger*) | Acciones ejecutadas |
 | :--- | :--- | :--- |
 | **1. Integración Continua (CI)** | `pull_request` y `push` a `main` | Descarga el código, configura Node.js 24 y ejecuta las pruebas unitarias (`npm test`). |
-| **2. Entrega Continua (CD)** | Solo `push` (Merge) a `main` | Si CI pasa: construye imagen Docker taggeada `prod-<run_number>`, levanta el contenedor para validar `/health` y `/sumar` (*Smoke Test*), y almacena la imagen empaquetada como artefacto. |
+| **2. Entrega Continua (CD)** | Solo `push` (Merge) a `main` | Si CI pasa: construye la imagen Docker taggeada `prod-<run_number>` y almacena el artefacto empaquetado listo para despliegue en GitHub Artifacts. |
